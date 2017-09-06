@@ -8,8 +8,9 @@
 
 #import "ViewController.h"
 #import <CoreBluetooth/CoreBluetooth.h>
+#import "ServiceController.h"
 
-@interface ViewController ()<CBCentralManagerDelegate,UITableViewDelegate,UITableViewDataSource>
+@interface ViewController ()<CBCentralManagerDelegate,UITableViewDelegate,UITableViewDataSource,CBPeripheralDelegate>
 
 @property (strong,nonatomic)CBCentralManager * blueToothManager;
 @property (strong,nonatomic)CBPeripheral * thePerpher;
@@ -38,7 +39,7 @@
 }
 
 - (void)layoutSubView{
-    self.tableView.frame = CGRectMake(64, 0, [UIScreen mainScreen].bounds.size.width,  [UIScreen mainScreen].bounds.size.height-64);
+    self.tableView.frame = CGRectMake(0, 64, [UIScreen mainScreen].bounds.size.width,  [UIScreen mainScreen].bounds.size.height-64);
 }
 
 #pragma mark - Action
@@ -57,8 +58,26 @@
 - (void)centralManager:(CBCentralManager *)central didDiscoverPeripheral:(CBPeripheral *)peripheral advertisementData:(NSDictionary *)advertisementData RSSI:(NSNumber *)RSSI{
     NSLog(@"扫描连接外设：%@ %@",peripheral.name,RSSI);
     
-    [self.dataArray addObject:peripheral];
-    [self.tableView reloadData];
+    if (!peripheral.name || peripheral.name.length == 0) {
+        return;
+    }
+    
+    BOOL isShow = NO;
+    for (CBPeripheral * per in self.dataArray ) {
+        if ([per.name isEqualToString: peripheral.name]) {
+            
+            [self.dataArray replaceObjectAtIndex:[self.dataArray indexOfObject:per] withObject:peripheral];
+            [self.tableView reloadData];
+            isShow = YES;
+            break;
+        }
+    }
+
+    if (!isShow) {
+        [self.dataArray addObject:peripheral];
+        [self.tableView reloadData];
+    }
+    
 }
 
 - (void)centralManager:(CBCentralManager *)central didFailToConnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error{
@@ -73,17 +92,25 @@
     //连接成功
     NSLog(@"链接设备成功:%@",peripheral.name);
     
+    ServiceController * service = [ServiceController new];
+    service.hardWarePerpher = peripheral;
+    self.thePerpher = peripheral;
+//    [peripheral setDelegate:self];
     
-    
-    
+    [self.navigationController pushViewController:service animated:YES];
+//    service.blueToothManager
+    [self stopAction];
 }
 
 - (void)centralManager:(CBCentralManager *)central didDisconnectPeripheral:(CBPeripheral *)peripheral error:(NSError *)error{
     
     NSLog(@"失去了和设备的的连接:%@",peripheral.name);
+    [self.navigationController popToRootViewControllerAnimated:YES];
     if (error) {
-        NSLog(@"失去原因是:%@",error.localizedDescription);
+    
+        NSLog(@"失去原因是:%@,%ld",error.localizedDescription,error.code);
     }
+    
 }
 
 //- (void)centralManager:(CBCentralManager *)central willRestoreState:(NSDictionary<NSString *,id> *)dict
@@ -119,6 +146,21 @@
         default:
             break;
     }
+}
+
+
+//扫描到服务
+-(void)peripheral:(CBPeripheral *)peripheral didDiscoverServices:(NSError *)error{
+    if (error){
+        NSLog(@"扫描外设服务出错：%@-> %@", peripheral.name, [error localizedDescription]);
+        return;
+    }
+    NSLog(@"扫描到外设服务：%@ -> %@",peripheral.name,peripheral.services);
+    for (CBService *service in peripheral.services) {
+        [peripheral discoverCharacteristics:nil forService:service];
+    }
+    NSLog(@"开始扫描外设服务的特征 %@...",peripheral.name);
+    
 }
 #pragma mark - UITableViewDelegate
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -178,11 +220,13 @@
         UIButton * startBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [startBtn setTitle:@"开始扫描" forState:UIControlStateNormal];
         [_headerView addSubview:startBtn];
+        startBtn.backgroundColor = [UIColor orangeColor];
         [startBtn addTarget:self action:@selector(startAction) forControlEvents:UIControlEventTouchUpInside];
         
         UIButton * stopBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         [_headerView addSubview:stopBtn];
         [stopBtn setTitle:@"结束扫描" forState:UIControlStateNormal];
+        stopBtn.backgroundColor = [UIColor blueColor];
         [stopBtn addTarget:self action:@selector(stopAction) forControlEvents:UIControlEventTouchUpInside];
         
         startBtn.frame = CGRectMake(0, 30, [UIScreen mainScreen].bounds.size.width/2, 80);

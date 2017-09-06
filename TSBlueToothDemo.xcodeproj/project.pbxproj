@@ -16,6 +16,7 @@
 		FC91952C1F5EC5B900ACBA6B /* TSBlueToothDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = FC91952B1F5EC5B900ACBA6B /* TSBlueToothDemoTests.m */; };
 		FC9195371F5EC5B900ACBA6B /* TSBlueToothDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = FC9195361F5EC5B900ACBA6B /* TSBlueToothDemoUITests.m */; };
 		FCB66FDB1F5ED19000A274DF /* ServiceController.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB66FDA1F5ED19000A274DF /* ServiceController.m */; };
+		FCB66FDE1F5FCACE00A274DF /* TSDeviceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB66FDD1F5FCACE00A274DF /* TSDeviceCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +55,8 @@
 		FC9195381F5EC5B900ACBA6B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FCB66FD91F5ED19000A274DF /* ServiceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ServiceController.h; sourceTree = "<group>"; };
 		FCB66FDA1F5ED19000A274DF /* ServiceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ServiceController.m; sourceTree = "<group>"; };
+		FCB66FDC1F5FCACE00A274DF /* TSDeviceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSDeviceCell.h; sourceTree = "<group>"; };
+		FCB66FDD1F5FCACE00A274DF /* TSDeviceCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSDeviceCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +118,8 @@
 				FC9195111F5EC5B900ACBA6B /* Supporting Files */,
 				FCB66FD91F5ED19000A274DF /* ServiceController.h */,
 				FCB66FDA1F5ED19000A274DF /* ServiceController.m */,
+				FCB66FDC1F5FCACE00A274DF /* TSDeviceCell.h */,
+				FCB66FDD1F5FCACE00A274DF /* TSDeviceCell.m */,
 			);
 			path = TSBlueToothDemo;
 			sourceTree = "<group>";
@@ -282,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FC9195191F5EC5B900ACBA6B /* ViewController.m in Sources */,
+				FCB66FDE1F5FCACE00A274DF /* TSDeviceCell.m in Sources */,
 				FC9195161F5EC5B900ACBA6B /* AppDelegate.m in Sources */,
 				FC9195131F5EC5B900ACBA6B /* main.m in Sources */,
 				FCB66FDB1F5ED19000A274DF /* ServiceController.m in Sources */,
